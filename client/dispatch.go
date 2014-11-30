@@ -117,10 +117,16 @@ func (hs *hSet) dispatch(conn *Conn, line *Line) {
 	hs.RLock()
 	defer hs.RUnlock()
 	ev := strings.ToLower(line.Cmd)
+	hs.dispatchEv(ev, conn, line)
+	hs.dispatchEv("*", conn, line)
+}
+
+func (hs *hSet) dispatchEv(ev string, conn *Conn, line *Line) {
 	list, ok := hs.set[ev]
 	if !ok {
 		return
 	}
+
 	wg := &sync.WaitGroup{}
 	for hn := list.start; hn != nil; hn = hn.next {
 		wg.Add(1)
