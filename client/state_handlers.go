@@ -191,7 +191,7 @@ func (conn *Conn) h_352(line *Line) {
 // Handle 353 names reply
 func (conn *Conn) h_353(line *Line) {
 	if ch := conn.st.GetChannel(line.Args[2]); ch != nil {
-		nicks := strings.Split(line.Args[len(line.Args)-1], " ")
+		nicks := strings.Split(line.Text(), " ")
 		for _, nick := range nicks {
 			// UnrealIRCd's coders are lazy and leave a trailing space
 			if nick == "" {
