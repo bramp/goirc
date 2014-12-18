@@ -121,6 +121,7 @@ func ParseLine(s string) *Line {
 	// separate events as opposed to forcing people to have gargantuan
 	// handlers to cope with the possibilities.
 	if (line.Cmd == PRIVMSG || line.Cmd == NOTICE) &&
+		len(line.Args) > 2 &&
 		len(line.Args[1]) > 2 &&
 		strings.HasPrefix(line.Args[1], "\001") &&
 		strings.HasSuffix(line.Args[1], "\001") {
