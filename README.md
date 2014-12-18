@@ -5,7 +5,9 @@ GoIRC Client Framework
 
 Pretty simple, really:
 
-	go get github.com/fluffle/goirc/client
+```shell
+go get github.com/fluffle/goirc/client
+```
 
 There is some example code that demonstrates usage of the library in `client.go`. This will connect to freenode and join `#go-nuts` by default, so be careful ;-)
 
@@ -16,44 +18,46 @@ old `go1` API.
 
 Synopsis:
 
-	import irc "github.com/fluffle/goirc/client"
+```go
+import irc "github.com/fluffle/goirc/client"
 
-	func main() {
-		// Creating a simple IRC client is simple.
-		c := irc.SimpleClient("nick")
+func main() {
+	// Creating a simple IRC client is simple.
+	c := irc.SimpleClient("nick")
 
-		// Or, create a config and fiddle with it first:
-		cfg := irc.NewConfig("nick")
-		cfg.SSL = true
-		cfg.Server = "irc.freenode.net:7000"
-		cfg.NewNick = func(n string) string { return n + "^" }
-		c := irc.Client(cfg)
+	// Or, create a config and fiddle with it first:
+	cfg := irc.NewConfig("nick")
+	cfg.SSL = true
+	cfg.Server = "irc.freenode.net:7000"
+	cfg.NewNick = func(n string) string { return n + "^" }
+	c := irc.Client(cfg)
 
-		// Add handlers to do things here!
-		// e.g. join a channel on connect.
-		c.HandleFunc("connected",
-			func(conn *irc.Conn, line *irc.Line) { conn.Join("#channel") })
-		// And a signal on disconnect
-		quit := make(chan bool)
-		c.HandleFunc("disconnected",
-			func(conn *irc.Conn, line *irc.Line) { quit <- true })
+	// Add handlers to do things here!
+	// e.g. join a channel on connect.
+	c.HandleFunc("connected",
+		func(conn *irc.Conn, line *irc.Line) { conn.Join("#channel") })
+	// And a signal on disconnect
+	quit := make(chan bool)
+	c.HandleFunc("disconnected",
+		func(conn *irc.Conn, line *irc.Line) { quit <- true })
 
-		// Tell client to connect.
-		if err := c.Connect(); err != nil {
-			fmt.Printf("Connection error: %s\n", err.String())
-		}
-
-		// With a "simple" client, set Server before calling Connect...
-		c.Config().Server = "irc.freenode.net"
-
-		// ... or, use ConnectTo instead.
-		if err := c.ConnectTo("irc.freenode.net"); err != nil {
-			fmt.Printf("Connection error: %s\n", err.String())
-		}
-
-		// Wait for disconnect
-		<-quit
+	// Tell client to connect.
+	if err := c.Connect(); err != nil {
+		fmt.Printf("Connection error: %s\n", err.String())
 	}
+
+	// With a "simple" client, set Server before calling Connect...
+	c.Config().Server = "irc.freenode.net"
+
+	// ... or, use ConnectTo instead.
+	if err := c.ConnectTo("irc.freenode.net"); err != nil {
+		fmt.Printf("Connection error: %s\n", err.String())
+	}
+
+	// Wait for disconnect
+	<-quit
+}
+```
 
 The test client provides a good (if basic) example of how to use the framework.
 Reading `client/handlers.go` gives a more in-depth look at how handlers can be
