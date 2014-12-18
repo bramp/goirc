@@ -212,18 +212,7 @@ func (conn *Conn) h_353(line *Line) {
 					// This nick isn't associated with this channel yet!
 					cp = conn.st.Associate(ch, nk)
 				}
-				switch c {
-				case '~':
-					cp.Owner = true
-				case '&':
-					cp.Admin = true
-				case '@':
-					cp.Op = true
-				case '%':
-					cp.HalfOp = true
-				case '+':
-					cp.Voice = true
-				}
+				cp.ParsePrefix(c)
 			}
 		}
 	} else {

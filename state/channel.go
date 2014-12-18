@@ -138,6 +138,38 @@ func (ch *Channel) delNick(nk *Nick) {
 	}
 }
 
+// Parses a user's prefix, for example '@' maps to the Op status.
+func (cp *ChanPrivs) ParsePrefix(status uint8) {
+	switch status {
+	case '~':
+		cp.Owner = true
+	case '&':
+		cp.Admin = true
+	case '@':
+		cp.Op = true
+	case '%':
+		cp.HalfOp = true
+	case '+':
+		cp.Voice = true
+	}
+}
+
+// Parses a user's mode, for example, 'o' is the Op status
+func (cp *ChanPrivs) ParseMode(modeop bool, mode uint8) {
+	switch mode {
+	case 'q':
+		cp.Owner = modeop
+	case 'a':
+		cp.Admin = modeop
+	case 'o':
+		cp.Op = modeop
+	case 'h':
+		cp.HalfOp = modeop
+	case 'v':
+		cp.Voice = modeop
+	}
+}
+
 // Parses mode strings for a channel.
 func (ch *Channel) ParseModes(modes string, modeargs ...string) {
 	var modeop bool // true => add mode, false => remove mode
@@ -193,18 +225,7 @@ func (ch *Channel) ParseModes(modes string, modeargs ...string) {
 			if len(modeargs) != 0 {
 				if nk, ok := ch.lookup[modeargs[0]]; ok {
 					cp := ch.nicks[nk]
-					switch m {
-					case 'q':
-						cp.Owner = modeop
-					case 'a':
-						cp.Admin = modeop
-					case 'o':
-						cp.Op = modeop
-					case 'h':
-						cp.HalfOp = modeop
-					case 'v':
-						cp.Voice = modeop
-					}
+					cp.ParseMode(modeop, m)
 					modeargs = modeargs[1:]
 				} else {
 					logging.Warn("Channel.ParseModes(): untracked nick %s "+
