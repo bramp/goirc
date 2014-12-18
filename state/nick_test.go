@@ -56,8 +56,13 @@ func TestNickParseModes(t *testing.T) {
 	md := nk.Modes
 
 	// Modes should all be false for a new nick
-	if md.Invisible || md.Oper || md.WallOps || md.HiddenHost || md.SSL {
+	if md.Bot || md.Invisible || md.Oper || md.WallOps || md.HiddenHost || md.SSL {
 		t.Errorf("Modes for new nick set to true.")
+	}
+
+	nk.ParseModes("")
+	if md.Bot || md.Invisible || md.Oper || md.WallOps || md.HiddenHost || md.SSL {
+		t.Errorf("Modes for empty string.")
 	}
 
 	// Set a couple of modes, for testing.
@@ -67,7 +72,9 @@ func TestNickParseModes(t *testing.T) {
 	// Parse a mode line that flips one true to false and two false to true
 	nk.ParseModes("+z-x+w")
 
-	if !md.Invisible || md.Oper || !md.WallOps || md.HiddenHost || !md.SSL {
+	if md.Bot || !md.Invisible || md.Oper || !md.WallOps || md.HiddenHost || !md.SSL {
 		t.Errorf("Modes not flipped correctly by ParseModes.")
 	}
+
+
 }
