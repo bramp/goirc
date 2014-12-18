@@ -5,7 +5,7 @@ package client
 
 import (
 	"strings"
-
+	"strconv"
 	"github.com/fluffle/goirc/logging"
 )
 
@@ -168,12 +168,14 @@ func (conn *Conn) h_352(line *Line) {
 	if nk == conn.Me() {
 		return
 	}
+
 	nk.Ident = line.Args[2]
 	nk.Host = line.Args[3]
-	// XXX: do we care about the actual server the nick is on?
-	//      or the hop count to this server?
+	nk.Server = line.Args[4]
+
 	// last arg contains "<hop count> <real name>"
-	a := strings.SplitN(line.Args[len(line.Args)-1], " ", 2)
+	a := strings.SplitN(line.Text(), " ", 2)
+	nk.Hopcount, _ = strconv.Atoi(a[0])
 	nk.Name = a[1]
 	if idx := strings.Index(line.Args[6], "*"); idx != -1 {
 		nk.Modes.Oper = true

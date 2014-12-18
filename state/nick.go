@@ -9,7 +9,8 @@ import (
 
 // A struct representing an IRC nick
 type Nick struct {
-	Nick, Ident, Host, Name string
+	Nick, Ident, Host, Server, Name string
+	Hopcount                int
 	Modes                   *NickMode
 	lookup                  map[string]*Channel
 	chans                   map[*Channel]*ChanPrivs
