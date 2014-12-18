@@ -183,8 +183,8 @@ func (conn *Conn) h_352(line *Line) {
 	if idx := strings.Index(line.Args[6], "B"); idx != -1 {
 		nk.Modes.Bot = true
 	}
-	if idx := strings.Index(line.Args[6], "H"); idx != -1 {
-		nk.Modes.Invisible = true
+	if idx := strings.Index(line.Args[6], "G"); idx != -1 {
+		nk.Modes.Away = true
 	}
 }
 

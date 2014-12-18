@@ -22,8 +22,8 @@ type Nick struct {
 // This is only really useful for me, as we can't see other people's modes
 // without IRC operator privileges (and even then only on some IRCd's).
 type NickMode struct {
-	// MODE +B, +i, +o, +w, +x, +z
-	Bot, Invisible, Oper, WallOps, HiddenHost, SSL bool
+	// MODE +a, +B, +i, +o, +w, +x, +z
+	Away, Bot, Invisible, Oper, WallOps, HiddenHost, SSL bool
 }
 
 // Map *irc.NickMode fields to IRC mode characters and vice versa
