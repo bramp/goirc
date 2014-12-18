@@ -186,6 +186,16 @@ func (conn *Conn) h_352(line *Line) {
 	if idx := strings.Index(line.Args[6], "G"); idx != -1 {
 		nk.Modes.Away = true
 	}
+
+	if ch := conn.st.GetChannel(line.Args[1]); ch != nil {
+		cp, ok := conn.st.IsOn(ch.Name, nk.Nick)
+		if !ok {
+			cp = conn.st.Associate(ch, nk)
+		}
+		cp.Op = strings.Index(line.Args[6], "@") != -1
+		cp.Voice = strings.Index(line.Args[6], "+") != -1
+		// TODO Should consider replacing with cp.ParseModeChar(c)
+	}
 }
 
 // Handle 353 names reply
