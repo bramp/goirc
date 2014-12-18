@@ -57,10 +57,14 @@ func (line *Line) Target() string {
 }
 
 // NOTE: Makes the assumption that all channels start with #.
+func IsChannel(name string) bool {
+	return strings.HasPrefix(name, "#")
+}
+
 func (line *Line) Public() bool {
 	switch line.Cmd {
 	case PRIVMSG, NOTICE, ACTION:
-		if strings.HasPrefix(line.Args[0], "#") {
+		if IsChannel(line.Args[0]) {
 			return true
 		}
 	case CTCP, CTCPREPLY:
@@ -70,7 +74,7 @@ func (line *Line) Public() bool {
 		// TODO(fluffle): Arguably this is broken, and we should have
 		// line.Args containing: []string{"#foo", "BAR", "baz"}
 		// ... OR change conn.Ctcp()'s argument order to be consistent.
-		if strings.HasPrefix(line.Args[1], "#") {
+		if IsChannel(line.Args[1]) {
 			return true
 		}
 	}
